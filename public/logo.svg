@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shopping cart icon -->
+  <g transform="translate(40, 40)">
+    <!-- Cart body -->
+    <path d="M 20 30 L 30 80 L 90 80 L 100 30 Z" fill="url(#grad)" stroke="#1A1A1A" stroke-width="3"/>
+    
+    <!-- Cart handle -->
+    <path d="M 15 30 L 20 10 Q 25 5 30 5 L 90 5 Q 95 5 100 10 L 105 30" fill="none" stroke="#1A1A1A" stroke-width="3"/>
+    
+    <!-- Wheels -->
+    <circle cx="40" cy="95" r="8" fill="#1A1A1A"/>
+    <circle cx="80" cy="95" r="8" fill="#1A1A1A"/>
+    
+    <!-- Accent line -->
+    <line x1="35" y1="50" x2="85" y2="50" stroke="white" stroke-width="2" opacity="0.5"/>
+  </g>
+</svg>
