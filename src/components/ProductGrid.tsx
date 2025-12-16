@@ -157,14 +157,21 @@ export default function ProductGrid({
                     onClick={() => onProductSelect(product)}
                     className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                   >
-                    <div className="aspect-square relative overflow-hidden">
+                    <div className="aspect-square relative overflow-hidden bg-gray-100">
                       <img
                         src={
-                          (product.images && product.images[0]) ||
-                          "https://via.placeholder.com/400"
+                          (product.images &&
+                            product.images.length > 0 &&
+                            product.images[0]) ||
+                          "https://via.placeholder.com/400?text=No+Image"
                         }
                         alt={product.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src =
+                            "https://via.placeholder.com/400?text=No+Image";
+                        }}
                       />
                     </div>
                     <div className="p-2">
@@ -217,14 +224,21 @@ export default function ProductGrid({
                     onClick={() => onProductSelect(product)}
                     className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                   >
-                    <div className="aspect-square relative overflow-hidden">
+                    <div className="aspect-square relative overflow-hidden bg-gray-100">
                       <img
                         src={
-                          (product.images && product.images[0]) ||
-                          "https://via.placeholder.com/400"
+                          (product.images &&
+                            product.images.length > 0 &&
+                            product.images[0]) ||
+                          "https://via.placeholder.com/400?text=No+Image"
                         }
                         alt={product.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src =
+                            "https://via.placeholder.com/400?text=No+Image";
+                        }}
                       />
                     </div>
                     <div className="p-2">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BannerSlider from "@/components/BannerSlider";
 import ProductGrid from "@/components/ProductGrid";
 import ProductDetailPage from "@/components/ProductDetailPage";
@@ -34,6 +34,24 @@ const BANNERS = [
 export default function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Handle browser back button
+  useEffect(() => {
+    if (selectedProduct) {
+      // Push a new history state when opening product details
+      window.history.pushState({ productOpen: true }, "");
+
+      const handlePopState = () => {
+        setSelectedProduct(null);
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }
+  }, [selectedProduct]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);

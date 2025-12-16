@@ -1,68 +1,72 @@
-import { useState } from 'react'
-import { Product, supabase } from '@/lib/supabase'
+import { useState } from "react";
+import { Product, supabase } from "@/lib/supabase";
+import ProductEditModal from "./ProductEditModal";
 
 interface ProductListProps {
-  products: Product[]
-  onUpdate: () => void
+  products: Product[];
+  onUpdate: () => void;
 }
 
 export default function ProductList({ products, onUpdate }: ProductListProps) {
-  const [deleting, setDeleting] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const handleDelete = async (productId: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
-    setDeleting(productId)
+    setDeleting(productId);
     try {
       const { error } = await supabase
-        .from('products')
+        .from("products")
         .delete()
-        .eq('id', productId)
+        .eq("id", productId);
 
-      if (error) throw error
+      if (error) throw error;
 
-      onUpdate()
+      onUpdate();
     } catch (err) {
-      console.error('Error deleting product:', err)
-      alert('Failed to delete product')
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product");
     } finally {
-      setDeleting(null)
+      setDeleting(null);
     }
-  }
+  };
 
   const handleExportCSV = () => {
     // Create CSV content
-    const headers = ['Title', 'Price', 'Affiliate URL', 'Tags', 'Created At']
+    const headers = ["Title", "Price", "Affiliate URL", "Tags", "Created At"];
     const rows = products.map((p) => [
       p.title,
       p.price,
       p.affiliate_url,
-      p.tags.join('; '),
+      p.tags.join("; "),
       new Date(p.created_at).toLocaleDateString(),
-    ])
+    ]);
 
     const csv = [
-      headers.join(','),
-      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(',')),
-    ].join('\n')
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
 
     // Download
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `products-${new Date().toISOString().split('T')[0]}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `products-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-text-muted mb-4">No products yet</p>
-        <p className="text-sm text-text-muted">Upload your first product to get started</p>
+        <p className="text-sm text-text-muted">
+          Upload your first product to get started
+        </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -71,10 +75,7 @@ export default function ProductList({ products, onUpdate }: ProductListProps) {
         <h2 className="text-xl font-semibold">
           All Products ({products.length})
         </h2>
-        <button
-          onClick={handleExportCSV}
-          className="btn-secondary text-sm"
-        >
+        <button onClick={handleExportCSV} className="btn-secondary text-sm">
           Export CSV
         </button>
       </div>
@@ -127,16 +128,34 @@ export default function ProductList({ products, onUpdate }: ProductListProps) {
                 View
               </a>
               <button
+                onClick={() => setEditingProduct(product)}
+                className="px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                Edit
+              </button>
+              <button
                 onClick={() => handleDelete(product.id)}
                 disabled={deleting === product.id}
                 className="px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
               >
-                {deleting === product.id ? 'Deleting...' : 'Delete'}
+                {deleting === product.id ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Edit Modal */}
+      {editingProduct && (
+        <ProductEditModal
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+          onSuccess={() => {
+            setEditingProduct(null);
+            onUpdate();
+          }}
+        />
+      )}
     </div>
-  )
+  );
 }
