@@ -27,11 +27,19 @@ const BANNERS = [
 
 export default function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
 
   return (
     <>
-      <BannerSlider banners={BANNERS} />
-      <ProductGrid onProductSelect={setSelectedProduct} />
+      <BannerSlider banners={BANNERS} onSearch={handleSearch} />
+      <ProductGrid
+        onProductSelect={setSelectedProduct}
+        searchQuery={searchQuery}
+      />
       <ProductDetailOverlay
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}

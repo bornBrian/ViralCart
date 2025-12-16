@@ -3,14 +3,16 @@ import { Product, supabase } from "@/lib/supabase";
 
 interface ProductGridProps {
   onProductSelect: (product: Product) => void;
+  searchQuery?: string;
 }
 
-export default function ProductGrid({ onProductSelect }: ProductGridProps) {
+export default function ProductGrid({ searchQuery = "" }: ProductGridProps) {
   const [productsByCategory, setProductsByCategory] = useState<
     Record<string, Product[]>
   >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetchProducts();
@@ -25,6 +27,8 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
+
+      setAllProducts(data || []);
 
       // Group products by category
       const grouped = (data || []).reduce((acc, product) => {
@@ -113,54 +117,136 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
     );
   }
 
-  return (
-    <section id="products" className="py-3 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-3">
-        {categories.map((category) => (
-          <div key={category} className="mb-6">
-            {/* Category Header */}
-            <div className="flex items-center justify-between mb-3 px-1">
-              <h2 className="text-base md:text-lg font-bold text-gray-900">
-                {category}
-              </h2>
-              {productsByCategory[category].length > 6 && (
-                <button className="text-accent text-xs md:text-sm font-medium">
-                  See All →
-                </button>
-              )}
-            </div>
+  // Filter products based on search
+  const filteredProducts = searchQuery
+    ? allProducts.filter(
+        (p) =>
+          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
-            {/* Products Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
-              {productsByCategory[category].slice(0, 10).map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => onProductSelect(product)}
-                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <div className="aspect-square relative overflow-hidden">
-                    <img
-                      src={
-                        (product.images && product.images[0]) ||
-                        "https://via.placeholder.com/400"
-                      }
-                      alt={product.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
+  const displayCategories = searchQuery ? {} : productsByCategory;
+
+  return (
+    <section id="products" className="py-3 bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-3 pb-20">
+        {/* Search Results */}
+        {searchQuery && (
+          <div className="mb-6">
+            <h2 className="text-base md:text-lg font-bold text-gray-900 mb-3 px-1">
+              Search Results for "{searchQuery}" ({filteredProducts.length})
+            </h2>
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-sm">
+                  No products found matching "{searchQuery}"
+                </p>
+                <p className="text-gray-400 text-xs mt-2">
+                  Try different keywords
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="aspect-square relative overflow-hidden">
+                      <img
+                        src={
+                          (product.images && product.images[0]) ||
+                          "https://via.placeholder.com/400"
+                        }
+                        alt={product.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-2">
+                      <h3 className="text-xs md:text-sm font-medium text-gray-900 line-clamp-2 mb-1">
+                        {product.title}
+                      </h3>
+                      <p className="text-sm md:text-base font-bold text-accent mb-2">
+                        ${product.price}
+                      </p>
+                      <a
+                        href={product.affiliate_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="block w-full bg-accent hover:bg-accent-hover text-white text-xs font-medium py-1.5 rounded text-center transition-colors"
+                      >
+                        Order Amazon
+                      </a>
+                    </div>
                   </div>
-                  <div className="p-2">
-                    <h3 className="text-xs md:text-sm font-medium text-gray-900 line-clamp-2 mb-1">
-                      {product.title}
-                    </h3>
-                    <p className="text-sm md:text-base font-bold text-accent">
-                      ${product.price}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
+        )}
+
+        {/* Category Products */}
+        {!searchQuery &&
+          Object.keys(displayCategories).map((category) => (
+            <div key={category} className="mb-6">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <h2 className="text-base md:text-lg font-bold text-gray-900">
+                  {category}
+                </h2>
+                {productsByCategory[category].length > 6 && (
+                  <button className="text-accent text-xs md:text-sm font-medium">
+                    See All →
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
+                {productsByCategory[category].slice(0, 10).map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="aspect-square relative overflow-hidden">
+                      <img
+                        src={
+                          (product.images && product.images[0]) ||
+                          "https://via.placeholder.com/400"
+                        }
+                        alt={product.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-2">
+                      <h3 className="text-xs md:text-sm font-medium text-gray-900 line-clamp-2 mb-1">
+                        {product.title}
+                      </h3>
+                      <p className="text-sm md:text-base font-bold text-accent mb-2">
+                        ${product.price}
+                      </p>
+                      <a
+                        href={product.affiliate_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="block w-full bg-accent hover:bg-accent-hover text-white text-xs font-medium py-1.5 rounded text-center transition-colors"
+                      >
+                        Order Amazon
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+        {/* End of Products Indicator */}
+        {!searchQuery && Object.keys(displayCategories).length > 0 && (
+          <div className="text-center py-8 border-t border-gray-200 mt-8">
+            <p className="text-gray-400 text-xs">— End of Products —</p>
+          </div>
+        )}
       </div>
     </section>
   );
