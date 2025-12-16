@@ -1,8 +1,4 @@
-interface HeroProps {
-  onCTAClick: () => void;
-}
-
-export default function Hero({ onCTAClick }: HeroProps) {
+export default function Hero() {
   return (
     <section className="bg-gradient-to-r from-accent to-emerald-500 px-4 py-5 shadow-sm">
       <div className="max-w-7xl mx-auto">

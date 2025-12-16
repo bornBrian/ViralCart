@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Product, supabase } from "@/lib/supabase";
-import CategoryRow from "./CategoryRow";
 
 interface ProductGridProps {
   onProductSelect: (product: Product) => void;
@@ -141,7 +140,10 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
                 >
                   <div className="aspect-square relative overflow-hidden">
                     <img
-                      src={product.image_url}
+                      src={
+                        (product.images && product.images[0]) ||
+                        "https://via.placeholder.com/400"
+                      }
                       alt={product.title}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
@@ -151,10 +153,7 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
                       {product.title}
                     </h3>
                     <p className="text-sm md:text-base font-bold text-accent">
-                      $
-                      {typeof product.price === "number"
-                        ? product.price.toFixed(2)
-                        : product.price}
+                      ${product.price}
                     </p>
                   </div>
                 </div>

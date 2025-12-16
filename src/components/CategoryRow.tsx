@@ -57,7 +57,7 @@ export default function CategoryRow({
             >
               <ProductCard
                 product={product}
-                onClick={() => onProductSelect(product)}
+                onDetailClick={() => onProductSelect(product)}
               />
             </div>
           ))}
