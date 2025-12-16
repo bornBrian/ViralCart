@@ -45,7 +45,12 @@ export function slugify(text: string): string {
 /**
  * Format price
  */
-export function formatPrice(price: string): string {
+export function formatPrice(price: string | number): string {
+  // If it's a number, format it
+  if (typeof price === "number") {
+    return `$${price.toFixed(2)}`;
+  }
+
   // If already formatted, return as-is
   if (price.startsWith("$")) return price;
 
