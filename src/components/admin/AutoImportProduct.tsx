@@ -28,12 +28,36 @@ export default function AutoImportProduct({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Listen for messages from bookmarklet
+  // Listen for messages from bookmarklet and check URL params
   useEffect(() => {
+    // Check if data is in URL (from bookmarklet)
+    const params = new URLSearchParams(window.location.search);
+    const dataParam = params.get("data");
+
+    if (dataParam) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(dataParam));
+        console.log("Received product data from URL:", decoded);
+        setExtractedData(decoded);
+        setError(null);
+
+        // Clean up URL without reloading
+        window.history.replaceState(
+          {},
+          "",
+          window.location.pathname +
+            "?token=viral-cart-admin-2025-secure-token&mode=import"
+        );
+      } catch (err) {
+        console.error("Failed to parse product data:", err);
+        setError("Failed to load product data");
+      }
+    }
+
+    // Also keep message listener as fallback
     const handleMessage = (event: MessageEvent) => {
-      // Only accept messages from our bookmarklet
       if (event.data.type === "AMAZON_PRODUCT_DATA") {
-        console.log("Received product data:", event.data.product);
+        console.log("Received product data via message:", event.data.product);
         setExtractedData(event.data.product);
         setError(null);
       }
@@ -43,7 +67,7 @@ export default function AutoImportProduct({
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  const bookmarkletCode = `javascript:(function(){var d=document;var t=d.querySelector('span#productTitle')||d.querySelector('h1.product-title-word-break')||d.querySelector('.product-title');var p=d.querySelector('.a-price-whole')||d.querySelector('.a-price .a-offscreen')||d.querySelector('[data-a-color="price"]');var imgs=Array.from(d.querySelectorAll('#altImages img, #imageBlock img, .a-dynamic-image')).map(i=>i.src.replace(/\\._.*_\\./, '.')).filter((v,i,a)=>a.indexOf(v)===i&&v.includes('https')&&!v.includes('play-icon')).slice(0,6);var vids=Array.from(d.querySelectorAll('video source, [data-video-url]')).map(v=>v.src||v.dataset.videoUrl).filter(v=>v).slice(0,2);var desc=(d.querySelector('#feature-bullets')||d.querySelector('#productDescription')||{}).innerText||'';var data={title:t?t.innerText.trim():'',price:p?p.innerText.replace(/[^0-9.]/g,''):'',images:imgs,videos:vids,description:desc.substring(0,500),amazonUrl:window.location.href.split('?')[0]};window.open('${window.location.origin}/admin?token=viral-cart-admin-2025-secure-token&mode=import','_blank');setTimeout(()=>{window.opener?.postMessage({type:'AMAZON_PRODUCT_DATA',product:data},'${window.location.origin}')},1000);})();`;
+  const bookmarkletCode = `javascript:(function(){var d=document;var t=d.querySelector('span#productTitle')||d.querySelector('h1.product-title-word-break')||d.querySelector('.product-title');var p=d.querySelector('.a-price-whole')||d.querySelector('.a-price .a-offscreen')||d.querySelector('[data-a-color="price"]');var imgs=Array.from(d.querySelectorAll('#altImages img, #imageBlock img, .a-dynamic-image')).map(i=>i.src.replace(/\\._.*_\\./, '.')).filter((v,i,a)=>a.indexOf(v)===i&&v.includes('https')&&!v.includes('play-icon')).slice(0,6);var vids=Array.from(d.querySelectorAll('video source, [data-video-url]')).map(v=>v.src||v.dataset.videoUrl).filter(v=>v).slice(0,2);var desc=(d.querySelector('#feature-bullets')||d.querySelector('#productDescription')||{}).innerText||'';var data={title:t?t.innerText.trim():'',price:p?p.innerText.replace(/[^0-9.]/g,''):'',images:imgs,videos:vids,description:desc.substring(0,500),amazonUrl:window.location.href.split('?')[0]};var encoded=encodeURIComponent(JSON.stringify(data));window.open('${window.location.origin}/admin?token=viral-cart-admin-2025-secure-token&mode=import&data='+encoded,'_blank');})();`;
 
   const handleUpload = async () => {
     if (!extractedData || !affiliateUrl) {
