@@ -7,21 +7,27 @@ import { Product } from "@/lib/supabase";
 const BANNERS = [
   {
     image:
-      "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80",
-    title: "🔥 Hot Deals This Week",
-    subtitle: "Up to 50% off on selected items",
+      "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1400&q=80",
+    title: "🔥 Flash Sale Today",
+    subtitle: "Up to 70% off on trending products",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=1200&q=80",
-    title: "⚡ Fast Delivery",
-    subtitle: "Get your products in 2-3 days",
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1400&q=80",
+    title: "💎 New Arrivals",
+    subtitle: "Fresh products added daily",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80",
-    title: "✨ Quality Guaranteed",
-    subtitle: "Every product tested and verified",
+      "https://images.unsplash.com/photo-1573855619003-97b4799dcd8b?w=1400&q=80",
+    title: "🎁 Best Sellers",
+    subtitle: "Top rated by customers",
+  },
+  {
+    image:
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&q=80",
+    title: "⚡ Limited Time Offer",
+    subtitle: "Grab them before they're gone",
   },
 ];
 
