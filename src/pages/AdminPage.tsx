@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { supabase, Product } from "@/lib/supabase";
+import AutoImportProduct from "@/components/admin/AutoImportProduct";
 import QuickAddProduct from "@/components/admin/QuickAddProduct";
 import ProductUploadForm from "@/components/admin/ProductUploadForm";
 import ProductList from "@/components/admin/ProductList";
@@ -12,12 +13,15 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<
     "upload" | "products" | "analytics"
   >("upload");
-  const [uploadMode, setUploadMode] = useState<"quick" | "full">("quick");
+  const [uploadMode, setUploadMode] = useState<"auto" | "quick" | "full">(
+    "auto"
+  );
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     // Check for admin token in URL
     const token = searchParams.get("token");
+    const mode = searchParams.get("mode");
     const adminToken =
       import.meta.env.VITE_ADMIN_TOKEN || "demo-token-change-in-production";
 
@@ -27,6 +31,12 @@ export default function AdminPage() {
       sessionStorage.setItem("admin_auth", "true");
     } else if (sessionStorage.getItem("admin_auth") === "true") {
       setIsAuthenticated(true);
+    }
+
+    // If mode=import, switch to auto-import mode
+    if (mode === "import") {
+      setActiveTab("upload");
+      setUploadMode("auto");
     }
   }, [searchParams]);
 
@@ -149,20 +159,30 @@ export default function AdminPage() {
           {activeTab === "upload" && (
             <div>
               {/* Upload Mode Toggle */}
-              <div className="flex gap-3 mb-6 justify-center">
+              <div className="flex gap-2 mb-6 justify-center flex-wrap">
+                <button
+                  onClick={() => setUploadMode("auto")}
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
+                    uploadMode === "auto"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  🤖 Auto-Import (FASTEST!)
+                </button>
                 <button
                   onClick={() => setUploadMode("quick")}
-                  className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
                     uploadMode === "quick"
                       ? "bg-accent text-white shadow-lg"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  ⚡ Quick Add (Recommended)
+                  ⚡ Quick Add
                 </button>
                 <button
                   onClick={() => setUploadMode("full")}
-                  className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
                     uploadMode === "full"
                       ? "bg-accent text-white shadow-lg"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -172,7 +192,9 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              {uploadMode === "quick" ? (
+              {uploadMode === "auto" ? (
+                <AutoImportProduct onSuccess={fetchProducts} />
+              ) : uploadMode === "quick" ? (
                 <QuickAddProduct onSuccess={fetchProducts} />
               ) : (
                 <ProductUploadForm onSuccess={fetchProducts} />
