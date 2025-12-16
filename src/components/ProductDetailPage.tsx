@@ -135,33 +135,40 @@ export default function ProductDetailPage({
               item.includes("youtube.com") || item.includes("youtu.be");
             const isPinterest = item.includes("pinterest.com");
             const isVimeo = item.includes("vimeo.com");
+            const isTikTok = item.includes("tiktok.com");
+            const isInstagram = item.includes("instagram.com");
             const isDirectVideo = item.match(/\.(mp4|webm|ogg|mov)(\?|$)/i);
 
             // Convert URLs to embed format
             let embedUrl = item;
+            let canEmbed = true;
+
             if (isYouTube) {
               const videoId = item.match(
                 /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/
               )?.[1];
               embedUrl = videoId
-                ? `https://www.youtube.com/embed/${videoId}`
+                ? `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`
                 : item;
             } else if (isVimeo) {
               const videoId = item.match(/vimeo\.com\/(\d+)/)?.[1];
               embedUrl = videoId
-                ? `https://player.vimeo.com/video/${videoId}`
+                ? `https://player.vimeo.com/video/${videoId}?autoplay=0`
                 : item;
-            } else if (isPinterest) {
-              const pinId = item.match(/pin\/(\d+)/)?.[1];
-              embedUrl = pinId
-                ? `https://assets.pinterest.com/ext/embed.html?id=${pinId}`
+            } else if (isTikTok) {
+              const videoId = item.match(/video\/(\d+)/)?.[1];
+              embedUrl = videoId
+                ? `https://www.tiktok.com/embed/v2/${videoId}`
                 : item;
+            } else if (isPinterest || isInstagram) {
+              // Pinterest and Instagram don't allow embedding
+              canEmbed = false;
             }
 
             return (
               <div
                 key={index}
-                className="min-w-full h-full flex items-center justify-center bg-white"
+                className="min-w-full h-full flex items-center justify-center bg-white relative"
               >
                 {activeTab === "images" ? (
                   <img
@@ -175,18 +182,73 @@ export default function ProductDetailPage({
                     controls
                     className="w-full h-full"
                     playsInline
+                    controlsList="nodownload"
                   >
                     Your browser does not support the video tag.
                   </video>
-                ) : (
+                ) : canEmbed ? (
                   <iframe
                     src={embedUrl}
                     className="w-full h-full"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                     allowFullScreen
                     title={`${product.title} video ${index + 1}`}
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-presentation"
                   />
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-8 text-center">
+                    <div className="mb-4">
+                      <svg
+                        className="w-20 h-20 text-gray-400 mx-auto"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 mb-4 text-sm">
+                      This video is hosted on{" "}
+                      {isPinterest
+                        ? "Pinterest"
+                        : isInstagram
+                        ? "Instagram"
+                        : "an external platform"}
+                    </p>
+                    <a
+                      href={item}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-medium transition inline-flex items-center gap-2"
+                    >
+                      <span>Watch Video</span>
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                    </a>
+                  </div>
                 )}
               </div>
             );
