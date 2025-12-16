@@ -115,26 +115,52 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
   }
 
   return (
-    <section
-      id="products"
-      className="py-4 md:py-8 scroll-mt-20 bg-white"
-    >
-      <div className="max-w-[1600px] mx-auto">
-        {/* Section header */}
-        <div className="mb-6 px-4">
-          <h2 className="text-xl md:text-2xl font-bold text-charcoal">
-            Shop by Category
-          </h2>
-        </div>
-
-        {/* Category rows */}
+    <section id="products" className="py-3 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-3">
         {categories.map((category) => (
-          <CategoryRow
-            key={category}
-            category={category}
-            products={productsByCategory[category]}
-            onProductSelect={onProductSelect}
-          />
+          <div key={category} className="mb-6">
+            {/* Category Header */}
+            <div className="flex items-center justify-between mb-3 px-1">
+              <h2 className="text-base md:text-lg font-bold text-gray-900">
+                {category}
+              </h2>
+              {productsByCategory[category].length > 6 && (
+                <button className="text-accent text-xs md:text-sm font-medium">
+                  See All →
+                </button>
+              )}
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
+              {productsByCategory[category].slice(0, 10).map((product) => (
+                <div
+                  key={product.id}
+                  onClick={() => onProductSelect(product)}
+                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                >
+                  <div className="aspect-square relative overflow-hidden">
+                    <img
+                      src={product.image_url}
+                      alt={product.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-2">
+                    <h3 className="text-xs md:text-sm font-medium text-gray-900 line-clamp-2 mb-1">
+                      {product.title}
+                    </h3>
+                    <p className="text-sm md:text-base font-bold text-accent">
+                      $
+                      {typeof product.price === "number"
+                        ? product.price.toFixed(2)
+                        : product.price}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </section>
