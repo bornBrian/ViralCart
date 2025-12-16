@@ -43,7 +43,7 @@ export default function AutoImportProduct({
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  const bookmarkletCode = `javascript:(function(){var d=document;var t=d.querySelector('span#productTitle')||d.querySelector('h1.product-title-word-break')||d.querySelector('.product-title');var p=d.querySelector('.a-price-whole')||d.querySelector('.a-price .a-offscreen')||d.querySelector('[data-a-color="price"]');var imgs=Array.from(d.querySelectorAll('#altImages img, #imageBlock img, .a-dynamic-image')).map(i=>i.src.replace(/\\._.*_\\./, '.')).filter((v,i,a)=>a.indexOf(v)===i&&v.includes('https')&&!v.includes('play-icon')).slice(0,6);var vids=Array.from(d.querySelectorAll('video source, [data-video-url]')).map(v=>v.src||v.dataset.videoUrl).filter(v=>v).slice(0,2);var desc=(d.querySelector('#feature-bullets')||d.querySelector('#productDescription')||{}).innerText||'';var data={title:t?t.innerText.trim():'',price:p?p.innerText.replace(/[^0-9.]/g,''):'',images:imgs,videos:vids,description:desc.substring(0,500),amazonUrl:window.location.href.split('?')[0]};window.open('${window.location.origin}/admin?mode=import','_blank');setTimeout(()=>{window.opener?.postMessage({type:'AMAZON_PRODUCT_DATA',product:data},'${window.location.origin}')},1000);})();`;
+  const bookmarkletCode = `javascript:(function(){var d=document;var t=d.querySelector('span#productTitle')||d.querySelector('h1.product-title-word-break')||d.querySelector('.product-title');var p=d.querySelector('.a-price-whole')||d.querySelector('.a-price .a-offscreen')||d.querySelector('[data-a-color="price"]');var imgs=Array.from(d.querySelectorAll('#altImages img, #imageBlock img, .a-dynamic-image')).map(i=>i.src.replace(/\\._.*_\\./, '.')).filter((v,i,a)=>a.indexOf(v)===i&&v.includes('https')&&!v.includes('play-icon')).slice(0,6);var vids=Array.from(d.querySelectorAll('video source, [data-video-url]')).map(v=>v.src||v.dataset.videoUrl).filter(v=>v).slice(0,2);var desc=(d.querySelector('#feature-bullets')||d.querySelector('#productDescription')||{}).innerText||'';var data={title:t?t.innerText.trim():'',price:p?p.innerText.replace(/[^0-9.]/g,''):'',images:imgs,videos:vids,description:desc.substring(0,500),amazonUrl:window.location.href.split('?')[0]};window.open('${window.location.origin}/admin?token=viral-cart-admin-2025-secure-token&mode=import','_blank');setTimeout(()=>{window.opener?.postMessage({type:'AMAZON_PRODUCT_DATA',product:data},'${window.location.origin}')},1000);})();`;
 
   const handleUpload = async () => {
     if (!extractedData || !affiliateUrl) {
@@ -97,57 +97,42 @@ export default function AutoImportProduct({
   };
 
   return (
-    <div className="max-w-5xl">
-      {/* Setup Instructions */}
+    <div className="max-w-4xl">
       {!extractedData && (
-        <div className="card mb-6">
-          <h2 className="text-2xl font-bold mb-4">
-            🤖 Auto-Import from Amazon
-          </h2>
-          <p className="text-gray-700 mb-6">
-            One-click import! Extract product data automatically while browsing
-            Amazon.
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 className="text-xl font-bold mb-2">Auto-Import from Amazon</h2>
+          <p className="text-sm text-gray-600 mb-6">
+            Extract product data automatically while browsing Amazon
           </p>
 
-          {/* Step 1: Create Bookmarklet */}
-          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl p-6 mb-6">
-            <h3 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
-              <span className="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">
-                1
-              </span>
-              Setup (One-Time)
-            </h3>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+            <p className="text-sm font-medium mb-3">Setup Instructions:</p>
+            <ol className="text-sm text-gray-700 space-y-2 list-decimal list-inside">
+              <li>Click "Copy Bookmarklet" below</li>
+              <li>Right-click bookmarks bar → Add bookmark</li>
+              <li>Name: "Import to ViralCart"</li>
+              <li>Paste as URL → Save</li>
+            </ol>
+          </div>
 
-            <div className="space-y-4">
-              <p className="text-sm text-blue-800 font-medium">
-                Create a bookmark button to extract Amazon product data:
-              </p>
+          <div className="bg-white border border-gray-300 rounded p-3 mb-3">
+            <code className="text-xs text-gray-600 break-all block max-h-16 overflow-y-auto">
+              {bookmarkletCode}
+            </code>
+          </div>
 
-              <div className="bg-white rounded-lg p-4 border border-blue-200">
-                <p className="text-xs font-mono text-gray-600 mb-3 break-all max-h-20 overflow-y-auto">
-                  {bookmarkletCode}
-                </p>
-                <button
-                  onClick={copyBookmarklet}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition"
-                >
-                  📋 Copy Bookmarklet Code
-                </button>
-              </div>
+          <button
+            onClick={copyBookmarklet}
+            className="w-full bg-accent hover:bg-accent/90 text-white py-2.5 rounded font-medium mb-4"
+          >
+            Copy Bookmarklet
+          </button>
 
-              <div className="bg-blue-100 border border-blue-300 rounded-lg p-4">
-                <p className="text-sm font-medium text-blue-900 mb-2">
-                  How to install:
-                </p>
-                <ol className="text-xs text-blue-800 space-y-1 list-decimal list-inside">
-                  <li>Click "Copy Bookmarklet Code" above</li>
-                  <li>Right-click your bookmarks bar → Add new bookmark</li>
-                  <li>Name it "📦 Import to ViralCart"</li>
-                  <li>Paste the code as the URL</li>
-                  <li>Save!</li>
-                </ol>
-              </div>
-            </div>
+          <div className="bg-blue-50 border border-blue-200 rounded p-3">
+            <p className="text-sm text-gray-700">
+              <strong>Usage:</strong> Go to any Amazon product → Click your
+              bookmark → Paste affiliate link → Upload
+            </p>
           </div>
 
           {/* Step 2: Usage */}
@@ -202,30 +187,27 @@ export default function AutoImportProduct({
         </div>
       )}
 
-      {/* Extracted Product Data */}
       {extractedData && (
-        <div className="card">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-green-600">
-              ✅ Product Extracted!
-            </h2>
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Product Extracted</h2>
             <button
               onClick={() => setExtractedData(null)}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-400 hover:text-gray-600"
             >
-              ✕ Cancel
+              ✕
             </button>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded mb-4 text-sm">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-              ✅ Product uploaded successfully!
+            <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded mb-4 text-sm">
+              Product uploaded successfully!
             </div>
           )}
 
@@ -282,52 +264,42 @@ export default function AutoImportProduct({
             )}
           </div>
 
-          {/* Affiliate Link Input */}
-          <div className="space-y-4">
-            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
-              <h3 className="font-bold text-yellow-900 mb-2">
-                Now get your affiliate link:
-              </h3>
-              <ol className="text-xs text-yellow-800 space-y-1 list-decimal list-inside mb-3">
-                <li>Go to your Amazon Associates account</li>
-                <li>
-                  Search for:{" "}
-                  <span className="font-mono font-bold">
-                    {extractedData.title.substring(0, 30)}...
-                  </span>
-                </li>
-                <li>Copy the affiliate link</li>
-                <li>Paste it below</li>
-              </ol>
+          <div className="space-y-3">
+            <div className="bg-blue-50 border border-blue-200 rounded p-3">
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>Next:</strong> Get your affiliate link from Amazon
+                Associates
+              </p>
               <a
                 href="https://affiliate-program.amazon.com/home/productlinks"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-yellow-700 hover:underline font-medium"
+                className="text-sm text-blue-600 hover:underline"
               >
-                → Open Amazon Associates Link Builder
+                Open Amazon Associates →
               </a>
             </div>
 
             <div>
-              <label className="label">Your Amazon Affiliate Link *</label>
+              <label className="block text-sm font-medium mb-1">
+                Amazon Affiliate Link *
+              </label>
               <input
                 type="url"
                 value={affiliateUrl}
                 onChange={(e) => setAffiliateUrl(e.target.value)}
-                className="input"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="https://www.amazon.com/dp/B08...?tag=your-tag-20"
-                required
               />
             </div>
 
             <div>
-              <label className="label">Category (Optional)</label>
+              <label className="block text-sm font-medium mb-1">Category</label>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="input"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="Electronics, Fashion, etc."
               />
             </div>
@@ -335,9 +307,9 @@ export default function AutoImportProduct({
             <button
               onClick={handleUpload}
               disabled={loading || !affiliateUrl}
-              className="btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-accent hover:bg-accent/90 text-white py-3 rounded font-medium disabled:opacity-50"
             >
-              {loading ? "⏳ Uploading..." : "🚀 Upload Product"}
+              {loading ? "Uploading..." : "Upload Product"}
             </button>
           </div>
         </div>
