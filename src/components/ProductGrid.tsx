@@ -7,7 +7,9 @@ interface ProductGridProps {
 }
 
 export default function ProductGrid({ onProductSelect }: ProductGridProps) {
-  const [productsByCategory, setProductsByCategory] = useState<Record<string, Product[]>>({});
+  const [productsByCategory, setProductsByCategory] = useState<
+    Record<string, Product[]>
+  >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,7 +53,10 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
               <div className="h-8 bg-gray-200 rounded-lg w-48 mb-6 animate-pulse" />
               <div className="flex gap-4 overflow-x-auto">
                 {[1, 2, 3, 4].map((j) => (
-                  <div key={j} className="flex-shrink-0 w-[280px] animate-pulse">
+                  <div
+                    key={j}
+                    className="flex-shrink-0 w-[280px] animate-pulse"
+                  >
                     <div className="bg-gray-200 rounded-2xl aspect-square mb-4" />
                     <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
                     <div className="h-5 bg-gray-200 rounded w-1/2" />
@@ -110,16 +115,16 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
   }
 
   return (
-    <section id="products" className="py-12 md:py-20 scroll-mt-20 bg-gradient-to-b from-white to-gray-50">
+    <section
+      id="products"
+      className="py-4 md:py-8 scroll-mt-20 bg-white"
+    >
       <div className="max-w-[1600px] mx-auto">
         {/* Section header */}
-        <div className="mb-12 md:mb-16 px-4 md:px-6">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-charcoal">
+        <div className="mb-6 px-4">
+          <h2 className="text-xl md:text-2xl font-bold text-charcoal">
             Shop by Category
           </h2>
-          <p className="text-lg md:text-xl text-text-muted max-w-2xl">
-            Swipe to explore our hand-picked collections
-          </p>
         </div>
 
         {/* Category rows */}

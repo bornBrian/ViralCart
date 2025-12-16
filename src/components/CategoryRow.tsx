@@ -1,25 +1,41 @@
-import { Product } from '@/lib/supabase'
-import ProductCard from './ProductCard'
+import { Product } from "@/lib/supabase";
+import ProductCard from "./ProductCard";
 
 interface CategoryRowProps {
-  category: string
-  products: Product[]
-  onProductSelect: (product: Product) => void
+  category: string;
+  products: Product[];
+  onProductSelect: (product: Product) => void;
 }
 
-export default function CategoryRow({ category, products, onProductSelect }: CategoryRowProps) {
-  if (products.length === 0) return null
+export default function CategoryRow({
+  category,
+  products,
+  onProductSelect,
+}: CategoryRowProps) {
+  if (products.length === 0) return null;
 
   return (
     <div className="mb-12">
       {/* Category Header */}
-      <div className="flex items-center justify-between mb-6 px-4 md:px-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-charcoal">{category}</h2>
-        {products.length > 4 && (
-          <button className="text-accent hover:text-accent-hover font-medium text-sm md:text-base flex items-center gap-1 transition-colors">
+      <div className="flex items-center justify-between mb-4 px-4">
+        <h2 className="text-lg md:text-xl font-bold text-charcoal">
+          {category}
+        </h2>
+        {products.length > 3 && (
+          <button className="text-accent hover:text-accent-hover font-medium text-xs md:text-sm flex items-center gap-1 transition-colors">
             See All
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
         )}
@@ -27,20 +43,20 @@ export default function CategoryRow({ category, products, onProductSelect }: Cat
 
       {/* Horizontal Scrolling Products */}
       <div className="relative">
-        <div 
-          className="flex gap-4 md:gap-6 overflow-x-auto pb-4 px-4 md:px-6 snap-x snap-mandatory scrollbar-hide"
+        <div
+          className="flex gap-3 overflow-x-auto pb-4 px-4 snap-x snap-mandatory scrollbar-hide"
           style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
           }}
         >
           {products.map((product) => (
-            <div 
+            <div
               key={product.id}
-              className="flex-shrink-0 w-[280px] md:w-[320px] snap-start"
+              className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-[220px] snap-start"
             >
-              <ProductCard 
-                product={product} 
+              <ProductCard
+                product={product}
                 onClick={() => onProductSelect(product)}
               />
             </div>
@@ -48,5 +64,5 @@ export default function CategoryRow({ category, products, onProductSelect }: Cat
         </div>
       </div>
     </div>
-  )
+  );
 }

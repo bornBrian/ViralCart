@@ -5,15 +5,20 @@
 @layer base {
   body {
     @apply bg-soft-white text-charcoal antialiased;
-    font-feature-settings: 'cv11', 'ss01';
+    font-feature-settings: "cv11", "ss01";
     font-variant-numeric: oldstyle-nums;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display;
     letter-spacing: -0.025em;
   }
-  
+
   h1 {
     letter-spacing: -0.045em;
   }
@@ -25,39 +30,39 @@
            transition-all duration-200 active:scale-95 
            hover:shadow-lg hover:shadow-accent/20;
   }
-  
+
   .btn-secondary {
     @apply bg-charcoal hover:bg-charcoal-light text-white font-medium px-6 py-3 rounded-lg 
            transition-all duration-200 active:scale-95;
   }
-  
+
   .card {
     @apply bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl 
            transition-all duration-500 border border-gray-200;
     backdrop-filter: blur(10px);
     background: linear-gradient(to bottom, #ffffff, #fefefe);
   }
-  
+
   .product-card {
     @apply card cursor-pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .product-card:hover {
     transform: translateY(-8px) scale(1.01);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
   }
-  
+
   .product-card:active {
     transform: translateY(-4px) scale(0.99);
   }
-  
+
   .input {
     @apply w-full px-4 py-3 rounded-lg border border-gray-300 
            focus:border-accent focus:ring-2 focus:ring-accent/20 
            transition-all outline-none;
   }
-  
+
   .label {
     @apply block text-sm font-medium text-charcoal mb-2;
   }
@@ -67,7 +72,7 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-emerald-400;
   }
-  
+
   .smooth-transition {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -75,7 +80,8 @@
 
 /* Custom animations */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -119,13 +125,13 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FDFDF9;
+  background: #fdfdf9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #10B981, #059669);
+  background: linear-gradient(180deg, #10b981, #059669);
   border-radius: 5px;
-  border: 2px solid #FDFDF9;
+  border: 2px solid #fdfdf9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -145,7 +151,7 @@
   body {
     -webkit-tap-highlight-color: transparent;
   }
-  
+
   * {
     -webkit-touch-callout: none;
   }
@@ -153,6 +159,6 @@
 
 /* Focus visible for accessibility */
 *:focus-visible {
-  outline: 2px solid #10B981;
+  outline: 2px solid #10b981;
   outline-offset: 2px;
 }
