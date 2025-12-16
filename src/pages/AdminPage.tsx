@@ -61,33 +61,43 @@ export default function AdminPage() {
   };
 
   if (!isAuthenticated) {
+    const adminToken = "viral-cart-admin-2025-secure-token";
+    const currentUrl = window.location.origin + window.location.pathname;
+    const authUrl = `${currentUrl}?token=${adminToken}`;
+
     return (
       <div className="min-h-screen flex items-center justify-center px-4 bg-soft-white">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Admin Access</h1>
-            <p className="text-text-muted">
-              Access requires authentication token
-            </p>
+            <h1 className="text-3xl font-bold mb-2">🔐 Admin Access</h1>
+            <p className="text-text-muted">Authentication required</p>
           </div>
 
-          <div className="card">
-            <p className="text-sm text-text-muted mb-4">
-              To access the admin panel, add{" "}
-              <code className="bg-gray-100 px-2 py-1 rounded">
-                ?token=YOUR_TOKEN
-              </code>{" "}
-              to the URL.
-            </p>
-            <p className="text-xs text-text-muted">
-              Set the{" "}
-              <code className="bg-gray-100 px-1 rounded">ADMIN_TOKEN</code>{" "}
-              environment variable in your hosting platform.
-            </p>
+          <div className="card space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-sm font-semibold text-green-900 mb-2">
+                Click below to access admin panel:
+              </p>
+              <a
+                href={authUrl}
+                className="block w-full bg-accent hover:bg-accent-hover text-white font-medium py-3 px-4 rounded-lg text-center transition"
+              >
+                🚀 Enter Admin Panel
+              </a>
+            </div>
+
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <p className="text-xs font-medium text-gray-700 mb-2">
+                Or copy this link:
+              </p>
+              <code className="block bg-white px-3 py-2 rounded text-xs break-all border border-gray-300">
+                {authUrl}
+              </code>
+            </div>
           </div>
 
           <div className="mt-6 text-center">
-            <Link to="/" className="text-accent hover:underline">
+            <Link to="/" className="text-accent hover:underline text-sm">
               ← Back to home
             </Link>
           </div>
