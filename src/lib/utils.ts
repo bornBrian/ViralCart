@@ -1,23 +1,19 @@
+import { supabase } from './supabase'
+
 /**
  * Track product click - fires asynchronously before redirect
  */
 export async function trackProductClick(productId: string): Promise<void> {
-  const data = { product_id: productId }
-  
-  // Use sendBeacon for reliable tracking even during page unload
-  if (navigator.sendBeacon) {
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-    navigator.sendBeacon('/api/track-click', blob)
-  } else {
-    // Fallback for older browsers
-    fetch('/api/track-click', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-      keepalive: true,
-    }).catch(() => {
-      // Silent fail - don't block user experience
-    })
+  try {
+    await supabase.from('clicks').insert([
+      {
+        product_id: productId,
+        created_at: new Date().toISOString(),
+      },
+    ])
+  } catch (error) {
+    // Silent fail - don't block user experience
+    console.error('Failed to track click:', error)
   }
 }
 
