@@ -1,59 +1,38 @@
-import { useState } from "react";
-import { Product } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { Product, supabase } from "@/lib/supabase";
 import ProductCard from "./ProductCard";
 
 interface ProductGridProps {
   onProductSelect: (product: Product) => void;
 }
 
-// Sample products - replace with your own Amazon affiliate links
-const SAMPLE_PRODUCTS: Product[] = [
-  {
-    id: "1",
-    title: "Wireless Earbuds Pro",
-    description:
-      "Premium noise-cancelling wireless earbuds with 30-hour battery life",
-    price: 79.99,
-    image_url:
-      "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&q=80",
-    amazon_url: "https://amazon.com", // Replace with your affiliate link
-    category: "Electronics",
-    tags: ["audio", "wireless", "earbuds"],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    title: "Smart Watch Ultra",
-    description: "Fitness tracking smartwatch with heart rate monitor and GPS",
-    price: 199.99,
-    image_url:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80",
-    amazon_url: "https://amazon.com", // Replace with your affiliate link
-    category: "Electronics",
-    tags: ["smartwatch", "fitness", "health"],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    title: "Portable Power Bank",
-    description: "20000mAh fast-charging portable charger for all devices",
-    price: 39.99,
-    image_url:
-      "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=800&q=80",
-    amazon_url: "https://amazon.com", // Replace with your affiliate link
-    category: "Electronics",
-    tags: ["charger", "power bank", "portable"],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
-
 export default function ProductGrid({ onProductSelect }: ProductGridProps) {
-  const [products] = useState<Product[]>(SAMPLE_PRODUCTS);
-  const loading = false;
-  const error = null;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  async function fetchProducts() {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      setProducts(data || []);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("Failed to load products. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -78,6 +57,9 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
       <section className="py-16 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-red-500 mb-4">{error}</p>
+          <button onClick={fetchProducts} className="btn-secondary">
+            Try Again
+          </button>
         </div>
       </section>
     );
