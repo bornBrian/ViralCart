@@ -129,29 +129,68 @@ export default function ProductDetailPage({
           className="flex transition-transform duration-500 ease-out h-full"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {mediaItems.map((item, index) => (
-            <div
-              key={index}
-              className="min-w-full h-full flex items-center justify-center bg-white"
-            >
-              {activeTab === "images" ? (
-                <img
-                  src={item}
-                  alt={`${product.title} - ${index + 1}`}
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <video
-                  src={item}
-                  controls
-                  className="w-full h-full"
-                  playsInline
-                >
-                  Your browser does not support the video tag.
-                </video>
-              )}
-            </div>
-          ))}
+          {mediaItems.map((item, index) => {
+            // Detect video type
+            const isYouTube =
+              item.includes("youtube.com") || item.includes("youtu.be");
+            const isPinterest = item.includes("pinterest.com");
+            const isVimeo = item.includes("vimeo.com");
+            const isDirectVideo = item.match(/\.(mp4|webm|ogg|mov)(\?|$)/i);
+
+            // Convert URLs to embed format
+            let embedUrl = item;
+            if (isYouTube) {
+              const videoId = item.match(
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/
+              )?.[1];
+              embedUrl = videoId
+                ? `https://www.youtube.com/embed/${videoId}`
+                : item;
+            } else if (isVimeo) {
+              const videoId = item.match(/vimeo\.com\/(\d+)/)?.[1];
+              embedUrl = videoId
+                ? `https://player.vimeo.com/video/${videoId}`
+                : item;
+            } else if (isPinterest) {
+              const pinId = item.match(/pin\/(\d+)/)?.[1];
+              embedUrl = pinId
+                ? `https://assets.pinterest.com/ext/embed.html?id=${pinId}`
+                : item;
+            }
+
+            return (
+              <div
+                key={index}
+                className="min-w-full h-full flex items-center justify-center bg-white"
+              >
+                {activeTab === "images" ? (
+                  <img
+                    src={item}
+                    alt={`${product.title} - ${index + 1}`}
+                    className="w-full h-full object-contain"
+                  />
+                ) : isDirectVideo ? (
+                  <video
+                    src={item}
+                    controls
+                    className="w-full h-full"
+                    playsInline
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <iframe
+                    src={embedUrl}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title={`${product.title} video ${index + 1}`}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Dots Indicator */}
