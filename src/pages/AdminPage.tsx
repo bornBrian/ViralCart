@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { supabase, Product } from "@/lib/supabase";
+import QuickAddProduct from "@/components/admin/QuickAddProduct";
 import ProductUploadForm from "@/components/admin/ProductUploadForm";
 import ProductList from "@/components/admin/ProductList";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
@@ -10,7 +11,8 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "upload" | "products" | "analytics"
-  >("products");
+  >("upload");
+  const [uploadMode, setUploadMode] = useState<"quick" | "full">("quick");
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -145,7 +147,37 @@ export default function AdminPage() {
         {/* Content */}
         <div>
           {activeTab === "upload" && (
-            <ProductUploadForm onSuccess={fetchProducts} />
+            <div>
+              {/* Upload Mode Toggle */}
+              <div className="flex gap-3 mb-6 justify-center">
+                <button
+                  onClick={() => setUploadMode("quick")}
+                  className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                    uploadMode === "quick"
+                      ? "bg-accent text-white shadow-lg"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  ⚡ Quick Add (Recommended)
+                </button>
+                <button
+                  onClick={() => setUploadMode("full")}
+                  className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                    uploadMode === "full"
+                      ? "bg-accent text-white shadow-lg"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  📝 Full Details
+                </button>
+              </div>
+
+              {uploadMode === "quick" ? (
+                <QuickAddProduct onSuccess={fetchProducts} />
+              ) : (
+                <ProductUploadForm onSuccess={fetchProducts} />
+              )}
+            </div>
           )}
           {activeTab === "products" && (
             <ProductList products={products} onUpdate={fetchProducts} />
