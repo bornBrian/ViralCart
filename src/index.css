@@ -102,7 +102,17 @@
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Custom scrollbar */
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom vertical scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -120,6 +130,25 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #059669, #047857);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  * {
+    -webkit-touch-callout: none;
+  }
 }
 
 /* Focus visible for accessibility */

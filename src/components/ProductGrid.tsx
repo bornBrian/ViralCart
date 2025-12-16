@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Product, supabase } from "@/lib/supabase";
-import ProductCard from "./ProductCard";
+import CategoryRow from "./CategoryRow";
 
 interface ProductGridProps {
   onProductSelect: (product: Product) => void;
 }
 
 export default function ProductGrid({ onProductSelect }: ProductGridProps) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [productsByCategory, setProductsByCategory] = useState<Record<string, Product[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +25,15 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
 
       if (error) throw error;
 
-      setProducts(data || []);
+      // Group products by category
+      const grouped = (data || []).reduce((acc, product) => {
+        const category = product.category || "Featured";
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(product);
+        return acc;
+      }, {} as Record<string, Product[]>);
+
+      setProductsByCategory(grouped);
     } catch (err) {
       console.error("Error fetching products:", err);
       setError("Failed to load products. Please try again later.");
@@ -36,17 +44,22 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
 
   if (loading) {
     return (
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-200 rounded-2xl aspect-[4/3] mb-5" />
-                <div className="h-5 bg-gray-200 rounded-lg w-3/4 mb-3" />
-                <div className="h-5 bg-gray-200 rounded-lg w-1/2" />
+      <section className="py-12 md:py-20">
+        <div className="space-y-12">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="px-4 md:px-6">
+              <div className="h-8 bg-gray-200 rounded-lg w-48 mb-6 animate-pulse" />
+              <div className="flex gap-4 overflow-x-auto">
+                {[1, 2, 3, 4].map((j) => (
+                  <div key={j} className="flex-shrink-0 w-[280px] animate-pulse">
+                    <div className="bg-gray-200 rounded-2xl aspect-square mb-4" />
+                    <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
+                    <div className="h-5 bg-gray-200 rounded w-1/2" />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
     );
@@ -65,9 +78,11 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
     );
   }
 
-  if (products.length === 0) {
+  const categories = Object.keys(productsByCategory);
+
+  if (categories.length === 0) {
     return (
-      <section className="py-20 px-6">
+      <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mb-8">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
@@ -95,32 +110,27 @@ export default function ProductGrid({ onProductSelect }: ProductGridProps) {
   }
 
   return (
-    <section id="products" className="py-20 px-6 scroll-mt-20">
-      <div className="max-w-7xl mx-auto">
+    <section id="products" className="py-12 md:py-20 scroll-mt-20 bg-gradient-to-b from-white to-gray-50">
+      <div className="max-w-[1600px] mx-auto">
         {/* Section header */}
-        <div className="mb-16 text-center">
-          <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{ letterSpacing: "-0.03em" }}
-          >
-            Our Curated Collection
+        <div className="mb-12 md:mb-16 px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-charcoal">
+            Shop by Category
           </h2>
-          <p className="text-xl md:text-2xl text-text-muted max-w-3xl mx-auto font-light leading-relaxed">
-            Each product has been personally tested and vetted for quality,
-            functionality, and value
+          <p className="text-lg md:text-xl text-text-muted max-w-2xl">
+            Swipe to explore our hand-picked collections
           </p>
         </div>
 
-        {/* Product grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onDetailClick={onProductSelect}
-            />
-          ))}
-        </div>
+        {/* Category rows */}
+        {categories.map((category) => (
+          <CategoryRow
+            key={category}
+            category={category}
+            products={productsByCategory[category]}
+            onProductSelect={onProductSelect}
+          />
+        ))}
       </div>
     </section>
   );

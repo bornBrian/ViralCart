@@ -13,9 +13,9 @@ export default function Hero({ onCTAClick }: HeroProps) {
   }, [])
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center px-6 py-20 md:py-24 overflow-hidden">
+    <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center px-4 md:px-6 py-16 md:py-24 overflow-hidden">
       {/* Sophisticated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-warm-white via-accent-light/30 to-soft-white" />
+      <div className="absolute inset-0 bg-gradient-to-br from-warm-white via-accent-light/20 to-soft-white" />
       
       {/* Organic blob shapes */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl" />
@@ -32,19 +32,19 @@ export default function Hero({ onCTAClick }: HeroProps) {
       <div className="relative max-w-6xl mx-auto text-center">
         {/* Main headline */}
         <h1 
-          className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-[0.95] tracking-tighter-xl transition-all duration-1000 ${
+          className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 md:mb-8 leading-[1.1] md:leading-[0.95] transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
           Curated Amazon Finds —{' '}
-          <span className="text-gradient block mt-3">
+          <span className="text-gradient block mt-2 md:mt-3">
             Tested & Trusted
           </span>
         </h1>
 
         {/* Subline */}
         <p 
-          className={`text-xl sm:text-2xl md:text-3xl text-text-muted max-w-3xl mx-auto mb-12 font-light leading-relaxed transition-all duration-1000 delay-150 ${
+          className={`text-lg sm:text-xl md:text-2xl text-text-muted max-w-3xl mx-auto mb-8 md:mb-12 font-light leading-relaxed transition-all duration-1000 delay-150 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
           style={{ letterSpacing: '-0.01em' }}
@@ -55,7 +55,7 @@ export default function Hero({ onCTAClick }: HeroProps) {
         {/* CTA Button with sophisticated animation */}
         <button
           onClick={onCTAClick}
-          className={`group relative px-8 py-4 text-lg font-medium text-white bg-charcoal hover:bg-charcoal-light rounded-full inline-flex items-center gap-3 overflow-hidden transition-all duration-1000 delay-200 ${
+          className={`group relative px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium text-white bg-charcoal hover:bg-charcoal-light rounded-full inline-flex items-center gap-2 md:gap-3 overflow-hidden transition-all duration-1000 delay-200 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
           style={{ 
