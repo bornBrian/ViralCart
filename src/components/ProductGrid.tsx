@@ -6,7 +6,10 @@ interface ProductGridProps {
   searchQuery?: string;
 }
 
-export default function ProductGrid({ searchQuery = "" }: ProductGridProps) {
+export default function ProductGrid({
+  searchQuery = "",
+  onProductSelect,
+}: ProductGridProps) {
   const [productsByCategory, setProductsByCategory] = useState<
     Record<string, Product[]>
   >({});
@@ -151,7 +154,8 @@ export default function ProductGrid({ searchQuery = "" }: ProductGridProps) {
                 {filteredProducts.map((product) => (
                   <div
                     key={product.id}
-                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                    onClick={() => onProductSelect(product)}
+                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                   >
                     <div className="aspect-square relative overflow-hidden">
                       <img
@@ -170,15 +174,19 @@ export default function ProductGrid({ searchQuery = "" }: ProductGridProps) {
                       <p className="text-sm md:text-base font-bold text-accent mb-2">
                         ${product.price}
                       </p>
-                      <a
-                        href={product.affiliate_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(
+                            product.affiliate_url,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }}
                         className="block w-full bg-accent hover:bg-accent-hover text-white text-xs font-medium py-1.5 rounded text-center transition-colors"
                       >
                         Order Amazon
-                      </a>
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -206,7 +214,8 @@ export default function ProductGrid({ searchQuery = "" }: ProductGridProps) {
                 {productsByCategory[category].slice(0, 10).map((product) => (
                   <div
                     key={product.id}
-                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                    onClick={() => onProductSelect(product)}
+                    className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                   >
                     <div className="aspect-square relative overflow-hidden">
                       <img
@@ -225,15 +234,19 @@ export default function ProductGrid({ searchQuery = "" }: ProductGridProps) {
                       <p className="text-sm md:text-base font-bold text-accent mb-2">
                         ${product.price}
                       </p>
-                      <a
-                        href={product.affiliate_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(
+                            product.affiliate_url,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }}
                         className="block w-full bg-accent hover:bg-accent-hover text-white text-xs font-medium py-1.5 rounded text-center transition-colors"
                       >
                         Order Amazon
-                      </a>
+                      </button>
                     </div>
                   </div>
                 ))}
