@@ -13,8 +13,10 @@ CREATE TABLE products (
   price text,
   affiliate_url text NOT NULL,
   images text[], -- array of image URLs
+  videos text[], -- array of video URLs (optional)
   tags text[],
   available_countries text[],
+  category text, -- product category
   created_at timestamptz DEFAULT now()
 );
 

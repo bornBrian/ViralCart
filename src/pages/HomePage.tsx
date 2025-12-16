@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BannerSlider from "@/components/BannerSlider";
 import ProductGrid from "@/components/ProductGrid";
-import ProductDetailOverlay from "@/components/ProductDetailOverlay";
+import ProductDetailPage from "@/components/ProductDetailPage";
 import { Product } from "@/lib/supabase";
 
 const BANNERS = [
@@ -35,15 +35,20 @@ export default function HomePage() {
 
   return (
     <>
-      <BannerSlider banners={BANNERS} onSearch={handleSearch} />
-      <ProductGrid
-        onProductSelect={setSelectedProduct}
-        searchQuery={searchQuery}
-      />
-      <ProductDetailOverlay
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
+      {selectedProduct ? (
+        <ProductDetailPage
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      ) : (
+        <>
+          <BannerSlider banners={BANNERS} onSearch={handleSearch} />
+          <ProductGrid
+            onProductSelect={setSelectedProduct}
+            searchQuery={searchQuery}
+          />
+        </>
+      )}
     </>
   );
 }

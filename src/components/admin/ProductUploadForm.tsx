@@ -1,60 +1,80 @@
-import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
-import { slugify } from '@/lib/utils'
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { slugify } from "@/lib/utils";
 
 interface ProductUploadFormProps {
-  onSuccess: () => void
+  onSuccess: () => void;
 }
 
-export default function ProductUploadForm({ onSuccess }: ProductUploadFormProps) {
+export default function ProductUploadForm({
+  onSuccess,
+}: ProductUploadFormProps) {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
-    affiliate_url: '',
-    tags: '',
-    available_countries: 'US',
-  })
-  const [imageUrls, setImageUrls] = useState<string[]>([''])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+    title: "",
+    description: "",
+    price: "",
+    affiliate_url: "",
+    tags: "",
+    available_countries: "US",
+  });
+  const [imageUrls, setImageUrls] = useState<string[]>([""]);
+  const [videoUrls, setVideoUrls] = useState<string[]>([""]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleImageUrlChange = (index: number, value: string) => {
-    const newUrls = [...imageUrls]
-    newUrls[index] = value
-    setImageUrls(newUrls)
-  }
+    const newUrls = [...imageUrls];
+    newUrls[index] = value;
+    setImageUrls(newUrls);
+  };
 
   const addImageUrlField = () => {
-    setImageUrls([...imageUrls, ''])
-  }
+    setImageUrls([...imageUrls, ""]);
+  };
 
   const removeImageUrlField = (index: number) => {
-    setImageUrls(imageUrls.filter((_, i) => i !== index))
-  }
+    setImageUrls(imageUrls.filter((_, i) => i !== index));
+  };
+
+  const handleVideoUrlChange = (index: number, value: string) => {
+    const newUrls = [...videoUrls];
+    newUrls[index] = value;
+    setVideoUrls(newUrls);
+  };
+
+  const addVideoUrlField = () => {
+    setVideoUrls([...videoUrls, ""]);
+  };
+
+  const removeVideoUrlField = (index: number) => {
+    setVideoUrls(videoUrls.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setSuccess(false)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
 
     try {
       // Validate
       if (!formData.title || !formData.affiliate_url) {
-        throw new Error('Title and affiliate URL are required')
+        throw new Error("Title and affiliate URL are required");
       }
 
-      // Filter out empty image URLs
-      const validImages = imageUrls.filter((url) => url.trim() !== '')
+      // Filter out empty image URLs and video URLs
+      const validImages = imageUrls.filter((url) => url.trim() !== "");
+      const validVideos = videoUrls.filter((url) => url.trim() !== "");
 
       // Prepare data
       const productData = {
@@ -64,41 +84,48 @@ export default function ProductUploadForm({ onSuccess }: ProductUploadFormProps)
         price: formData.price,
         affiliate_url: formData.affiliate_url,
         images: validImages,
-        tags: formData.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
-        available_countries: formData.available_countries.split(',').map((c) => c.trim()),
-      }
+        videos: validVideos.length > 0 ? validVideos : null,
+        tags: formData.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
+        available_countries: formData.available_countries
+          .split(",")
+          .map((c) => c.trim()),
+      };
 
       // Insert into Supabase
       const { error: insertError } = await supabase
-        .from('products')
-        .insert([productData])
+        .from("products")
+        .insert([productData]);
 
-      if (insertError) throw insertError
+      if (insertError) throw insertError;
 
-      setSuccess(true)
-      
+      setSuccess(true);
+
       // Reset form
       setFormData({
-        title: '',
-        description: '',
-        price: '',
-        affiliate_url: '',
-        tags: '',
-        available_countries: 'US',
-      })
-      setImageUrls([''])
-      
-      onSuccess()
-      
+        title: "",
+        description: "",
+        price: "",
+        affiliate_url: "",
+        tags: "",
+        available_countries: "US",
+      });
+      setImageUrls([""]);
+      setVideoUrls([""]);
+
+      onSuccess();
+
       // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(false), 3000)
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      console.error('Error uploading product:', err)
-      setError(err.message || 'Failed to upload product')
+      console.error("Error uploading product:", err);
+      setError(err.message || "Failed to upload product");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-3xl">
@@ -192,7 +219,9 @@ export default function ProductUploadForm({ onSuccess }: ProductUploadFormProps)
                   <input
                     type="url"
                     value={url}
-                    onChange={(e) => handleImageUrlChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleImageUrlChange(index, e.target.value)
+                    }
                     className="input"
                     placeholder="https://example.com/image.jpg"
                   />
@@ -217,6 +246,45 @@ export default function ProductUploadForm({ onSuccess }: ProductUploadFormProps)
             </div>
             <p className="text-xs text-text-muted mt-2">
               Tip: Upload images to Supabase Storage or use direct URLs
+            </p>
+          </div>
+
+          {/* Video URLs */}
+          <div>
+            <label className="label">Product Videos (URLs) - Optional</label>
+            <div className="space-y-2">
+              {videoUrls.map((url, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) =>
+                      handleVideoUrlChange(index, e.target.value)
+                    }
+                    className="input"
+                    placeholder="https://example.com/video.mp4"
+                  />
+                  {videoUrls.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeVideoUrlField(index)}
+                      className="px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addVideoUrlField}
+                className="text-accent hover:underline text-sm"
+              >
+                + Add another video
+              </button>
+            </div>
+            <p className="text-xs text-text-muted mt-2">
+              Add demo videos or product reviews (MP4, WebM, etc.)
             </p>
           </div>
 
@@ -258,10 +326,10 @@ export default function ProductUploadForm({ onSuccess }: ProductUploadFormProps)
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Uploading...' : 'Upload Product'}
+            {loading ? "Uploading..." : "Upload Product"}
           </button>
         </form>
       </div>
     </div>
-  )
+  );
 }

@@ -14,9 +14,11 @@ export interface Product {
   price: string;
   affiliate_url: string;
   images: string[];
+  videos?: string[];
   tags: string[];
   available_countries: string[];
   created_at: string;
+  category?: string;
 }
 
 export interface ProductClick {
