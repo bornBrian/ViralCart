@@ -69,20 +69,20 @@ export default function AdminPage() {
       <div className="min-h-screen flex items-center justify-center px-4 bg-soft-white">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">🔐 Admin Access</h1>
+            <h1 className="text-3xl font-bold mb-2">Admin Access</h1>
             <p className="text-text-muted">Authentication required</p>
           </div>
 
           <div className="card space-y-4">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="text-sm font-semibold text-green-900 mb-2">
+            <div className="bg-white border border-gray-200 rounded-lg p-4">
+              <p className="text-sm font-medium text-gray-900 mb-3">
                 Click below to access admin panel:
               </p>
               <a
                 href={authUrl}
                 className="block w-full bg-accent hover:bg-accent-hover text-white font-medium py-3 px-4 rounded-lg text-center transition"
               >
-                🚀 Enter Admin Panel
+                Enter Admin Panel
               </a>
             </div>
 
@@ -174,31 +174,31 @@ export default function AdminPage() {
                   onClick={() => setUploadMode("auto")}
                   className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
                     uploadMode === "auto"
-                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+                      ? "bg-accent text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  🤖 Auto-Import (FASTEST!)
+                  Auto-Import
                 </button>
                 <button
                   onClick={() => setUploadMode("quick")}
                   className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
                     uploadMode === "quick"
-                      ? "bg-accent text-white shadow-lg"
+                      ? "bg-accent text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  ⚡ Quick Add
+                  Quick Add
                 </button>
                 <button
                   onClick={() => setUploadMode("full")}
                   className={`px-5 py-2.5 rounded-lg font-medium transition-all ${
                     uploadMode === "full"
-                      ? "bg-accent text-white shadow-lg"
+                      ? "bg-accent text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  📝 Full Details
+                  Full Details
                 </button>
               </div>
 

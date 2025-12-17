@@ -116,7 +116,7 @@ export default function AutoImportProduct({
   const copyBookmarklet = () => {
     navigator.clipboard.writeText(bookmarkletCode);
     alert(
-      "📋 Bookmarklet copied! Now create a bookmark and paste this as the URL"
+      "Bookmarklet copied! Now create a bookmark and paste this as the URL"
     );
   };
 
@@ -159,53 +159,20 @@ export default function AutoImportProduct({
             </p>
           </div>
 
-          {/* Step 2: Usage */}
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6">
-            <h3 className="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
-              <span className="bg-green-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">
-                2
-              </span>
-              How to Use
-            </h3>
-
-            <ol className="space-y-3 text-sm text-green-800">
-              <li className="flex items-start gap-3">
-                <span className="font-bold text-green-600">1.</span>
-                <span>Go to any Amazon product page you want to add</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="font-bold text-green-600">2.</span>
-                <span>
-                  Click the "📦 Import to ViralCart" bookmark you created
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="font-bold text-green-600">3.</span>
-                <span>
-                  A new tab will open here with all product data extracted!
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="font-bold text-green-600">4.</span>
-                <span>Paste your affiliate link and click Upload</span>
-              </li>
-            </ol>
-          </div>
-
           {/* Affiliate Tag Setting */}
-          <div className="mt-6 bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <label className="label text-purple-900">
-              Your Amazon Affiliate Tag (for quick conversion)
+          <div className="mt-6 bg-white border border-gray-200 rounded-lg p-4">
+            <label className="block text-sm font-medium mb-2">
+              Your Amazon Affiliate Tag
             </label>
             <input
               type="text"
               value={affiliateTag}
               onChange={(e) => setAffiliateTag(e.target.value)}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
               placeholder="your-tag-20"
             />
-            <p className="text-xs text-purple-700 mt-2">
-              💡 We'll show you how to get your affiliate link quickly
+            <p className="text-xs text-gray-600 mt-2">
+              This will be used for future imports
             </p>
           </div>
         </div>
@@ -282,7 +249,7 @@ export default function AutoImportProduct({
             {extractedData.videos.length > 0 && (
               <div>
                 <p className="text-xs font-medium text-gray-600 mb-1">
-                  Videos: {extractedData.videos.length} found ✅
+                  Videos: {extractedData.videos.length} found
                 </p>
               </div>
             )}

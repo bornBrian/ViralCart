@@ -121,7 +121,7 @@ export default function QuickAddProduct({ onSuccess }: QuickAddProductProps) {
       <div className="card">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold">⚡ Quick Add Product</h2>
+            <h2 className="text-2xl font-bold">Quick Add Product</h2>
             <p className="text-sm text-gray-600 mt-1">
               Fast workflow for adding products
             </p>
@@ -136,14 +136,17 @@ export default function QuickAddProduct({ onSuccess }: QuickAddProductProps) {
 
         {success && (
           <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-            ✅ Product added successfully!
+            Product added successfully!
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Affiliate Tag */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <label htmlFor="affiliateTag" className="label text-blue-900">
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <label
+              htmlFor="affiliateTag"
+              className="block text-sm font-medium mb-2"
+            >
               Your Amazon Affiliate Tag
             </label>
             <input
@@ -152,12 +155,11 @@ export default function QuickAddProduct({ onSuccess }: QuickAddProductProps) {
               name="affiliateTag"
               value={formData.affiliateTag}
               onChange={handleInputChange}
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
               placeholder="your-tag-20"
             />
-            <p className="text-xs text-blue-700 mt-2">
-              💡 Set your affiliate tag once, it will be saved for future
-              products
+            <p className="text-xs text-gray-600 mt-2">
+              Set your affiliate tag once, it will be saved for future products
             </p>
           </div>
 
@@ -234,11 +236,11 @@ export default function QuickAddProduct({ onSuccess }: QuickAddProductProps) {
               placeholder="https://www.amazon.com/dp/B08..."
             />
             {formData.amazonUrl && (
-              <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded">
-                <p className="text-xs font-medium text-green-800 mb-1">
-                  ✅ Your Affiliate Link:
+              <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded">
+                <p className="text-xs font-medium text-gray-700 mb-1">
+                  Your Affiliate Link:
                 </p>
-                <p className="text-xs text-green-700 break-all font-mono">
+                <p className="text-xs text-gray-600 break-all font-mono">
                   {generateAffiliatePreview()}
                 </p>
               </div>
@@ -265,7 +267,7 @@ https://example.com/image2.jpg,
 https://example.com/image3.jpg"
             />
             <p className="text-xs text-gray-600 mt-2">
-              💡 Right-click Amazon product images → Copy image address → Paste
+              Right-click Amazon product images → Copy image address → Paste
               here (one per line or comma-separated)
             </p>
           </div>
@@ -274,7 +276,6 @@ https://example.com/image3.jpg"
           {formData.imageUrls && (
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
               <p className="text-sm font-medium text-gray-700">
-                📸{" "}
                 {
                   formData.imageUrls.split(/[,\n]/).filter((url) => url.trim())
                     .length
@@ -290,7 +291,7 @@ https://example.com/image3.jpg"
             disabled={loading}
             className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed text-lg py-4"
           >
-            {loading ? "⏳ Adding Product..." : "⚡ Quick Add Product"}
+            {loading ? "Adding Product..." : "Add Product"}
           </button>
 
           <p className="text-xs text-gray-500 text-center">
@@ -302,22 +303,22 @@ https://example.com/image3.jpg"
 
       {/* Quick Tips */}
       <div className="mt-6 grid md:grid-cols-3 gap-4">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-bold text-blue-900 mb-2">1️⃣ Copy Title</h3>
-          <p className="text-xs text-blue-800">
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 mb-2">1. Copy Title</h3>
+          <p className="text-xs text-gray-600">
             From Amazon product page, copy the product title
           </p>
         </div>
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="font-bold text-green-900 mb-2">2️⃣ Get Images</h3>
-          <p className="text-xs text-green-800">
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 mb-2">2. Get Images</h3>
+          <p className="text-xs text-gray-600">
             Right-click product images → "Copy image address" → Paste all at
             once
           </p>
         </div>
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-          <h3 className="font-bold text-purple-900 mb-2">3️⃣ Paste URL</h3>
-          <p className="text-xs text-purple-800">
+        <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 mb-2">3. Paste URL</h3>
+          <p className="text-xs text-gray-600">
             Copy Amazon URL from address bar → Auto-converts to affiliate link
           </p>
         </div>
